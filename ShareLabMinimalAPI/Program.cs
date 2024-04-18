@@ -25,12 +25,17 @@ builder.Services.AddCors(options =>
 });
 
 builder.Services.AddOutputCache();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 
 // End services area
 
 var app = builder.Build();
 
 // Start middlewarte area
+
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.UseCors();
 app.UseOutputCache();
@@ -47,7 +52,7 @@ app.MapGet("/movies", () =>
         new Movie { id = 3, Name = "The Dark Knight" }
     };
     return movies;
-}).CacheOutput(c => c.Expire(TimeSpan.FromSeconds(10)));
+}).CacheOutput(c => c.Expire(TimeSpan.FromSeconds(15)));
 
 // End middleware area
 
