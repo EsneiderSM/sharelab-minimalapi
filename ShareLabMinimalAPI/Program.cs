@@ -24,14 +24,16 @@ builder.Services.AddCors(options =>
     });
 });
 
-// End services area
+builder.Services.AddOutputCache();
 
+// End services area
 
 var app = builder.Build();
 
 // Start middlewarte area
 
 app.UseCors();
+app.UseOutputCache();
 
 app.MapGet("/", [EnableCors(policyName: "all")]() => "Hello World!");
 app.MapGet("/appName", () => appName);
@@ -45,7 +47,7 @@ app.MapGet("/movies", () =>
         new Movie { id = 3, Name = "The Dark Knight" }
     };
     return movies;
-});
+}).CacheOutput(c => c.Expire(TimeSpan.FromSeconds(10)));
 
 // End middleware area
 
