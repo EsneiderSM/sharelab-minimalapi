@@ -33,7 +33,7 @@ var app = builder.Build();
 
 app.UseCors();
 
-app.MapGet("/", () => "Hello World!");
+app.MapGet("/", [EnableCors(policyName: "all")]() => "Hello World!");
 app.MapGet("/appName", () => appName);
 
 app.MapGet("/movies", () =>
