@@ -1,10 +1,28 @@
+using Microsoft.AspNetCore.Cors;
 using ShareLabMinimalAPI.Entities;
 
 var builder = WebApplication.CreateBuilder(args);
 var appName = builder.Configuration.GetValue<string>("AppName");
+var allowedOrigins = builder.Configuration.GetValue<string>("AllowedOrigins")!;
 
 // Start services area
 
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(builder =>
+    {
+        builder.WithOrigins(allowedOrigins)
+               .AllowAnyMethod()
+               .AllowAnyHeader();
+    });
+
+    options.AddPolicy("all", builder =>
+    {
+        builder.AllowAnyOrigin()
+               .AllowAnyMethod()
+               .AllowAnyHeader();
+    });
+});
 
 // End services area
 
@@ -12,6 +30,8 @@ var appName = builder.Configuration.GetValue<string>("AppName");
 var app = builder.Build();
 
 // Start middlewarte area
+
+app.UseCors();
 
 app.MapGet("/", () => "Hello World!");
 app.MapGet("/appName", () => appName);
